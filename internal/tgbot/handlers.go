@@ -2,6 +2,7 @@ package tgbot
 
 import (
 	"context"
+	internal "github.com/Albert12932/TelegramBot/internal/service"
 	"github.com/Albert12932/TelegramBot/pkg/utils"
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
@@ -57,9 +58,10 @@ func MyDefaultHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 func FootballHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 	message, err := b.SendMessage(ctx, &bot.SendMessageParams{
 		ChatID:    update.Message.Chat.ID,
-		Text:      "Enter",
+		Text:      "Football info",
 		ParseMode: models.ParseModeMarkdown,
 	})
+	internal.Football_get()
 	if err != nil {
 		log.Printf("Error %s in %v", err, utils.GetFunctionName())
 		return
