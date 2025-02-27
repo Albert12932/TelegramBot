@@ -39,11 +39,26 @@ func MyDefaultHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 
 }
 
-func CommandHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
+// Multiple select handler
+//func CommandHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
+//	message, err := b.SendMessage(ctx, &bot.SendMessageParams{
+//		ChatID:      update.Message.Chat.ID,
+//		Text:        "Select multiple options",
+//		ReplyMarkup: utils.BuildKeyboard(),
+//	})
+//	if err != nil {
+//		log.Printf("Error %s in %v", err, utils.GetFunctionName())
+//		return
+//	}
+//
+//	log.Printf("send message to Chat %v: %v", update.Message.Chat.ID, message.Text)
+//}
+
+func FootballHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 	message, err := b.SendMessage(ctx, &bot.SendMessageParams{
-		ChatID:      update.Message.Chat.ID,
-		Text:        "Select multiple options",
-		ReplyMarkup: utils.BuildKeyboard(),
+		ChatID:    update.Message.Chat.ID,
+		Text:      "Enter",
+		ParseMode: models.ParseModeMarkdown,
 	})
 	if err != nil {
 		log.Printf("Error %s in %v", err, utils.GetFunctionName())

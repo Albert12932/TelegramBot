@@ -3,6 +3,7 @@ package tgbot
 import (
 	"context"
 	"fmt"
+	"git"
 	"github.com/go-telegram/bot"
 	"os"
 	"os/signal"
@@ -17,7 +18,7 @@ func Start(token string) {
 		bot.WithMessageTextHandler("/select", bot.MatchTypeExact, CommandHandler),
 		bot.WithDefaultHandler(MyDefaultHandler),
 		//bot.WithCallbackQueryDataHandler("btn_", bot.MatchTypePrefix, utils.CallbackHandler),
-
+		bot.WithMessageTextHandler("/foot", bot.MatchTypeExact, Football_get),
 	}
 
 	b, err := bot.New(token, options...)
