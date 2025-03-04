@@ -10,10 +10,13 @@ import (
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error while loading .env", err)
+		log.Fatal("Error while loading .env ", err)
 	}
 
 	token := os.Getenv("TELEGRAM_BOT_TOKEN")
-	tgbot.Start(token)
+	webHookURL := os.Getenv("WEBHOOK_URL")
+	if err := tgbot.Start(token, webHookURL); err != nil {
+		log.Fatal("Ошибка при запуске бота", err)
+	}
 
 }

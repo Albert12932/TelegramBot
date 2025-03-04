@@ -20,7 +20,7 @@ type Response struct {
 }
 
 func Football_get() {
-	apiKey := os.Getenv("FOOTBALL_API_KEY") // Используем API-ключ из переменной окружения
+	apiKey := os.Getenv("FOOTBALL_API_TOKEN") // Используем API-ключ из переменной окружения
 	url := "https://api.football-data.org/v4/competitions"
 
 	// Создаём HTTP-клиент
@@ -45,7 +45,6 @@ func Football_get() {
 		fmt.Println("Ошибка парсинга JSON:", err)
 		return
 	}
-
 	// Выводим список лиг
 	for _, comp := range response.Competitions {
 		fmt.Printf("ID: %d, Лига: %s (%s)\n", comp.ID, comp.Name, comp.Code)

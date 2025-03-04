@@ -1,31 +1,44 @@
 package tgbot
 
 import (
-	"context"
+	"errors"
 	"fmt"
 	"github.com/go-telegram/bot"
-	"os"
-	"os/signal"
+	"log"
+	"net/http"
 )
 
+var BotInstance *bot.Bot
+
 // Start bot
-func Start(token string) {
-	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
-	defer cancel()
+func Start(token, webHookURL string) error {
+	var err error
 
-	options := []bot.Option{
-		bot.WithDefaultHandler(MyDefaultHandler),
-		bot.WithMessageTextHandler("/start", bot.MatchTypeExact, MyStartHandler),
-		//bot.WithMessageTextHandler("/select", bot.MatchTypeExact, utils.CommandHandler),
-		//bot.WithCallbackQueryDataHandler("btn_", bot.MatchTypePrefix, utils.CallbackHandler),
-		bot.WithMessageTextHandler("/foot", bot.MatchTypeExact, FootballHandler),
-	}
-
-	b, err := bot.New(token, options...)
+	BotInstance, err = bot.New(token)
 	if err != nil {
 		fmt.Println("Error while starting bot:", err)
-		return
+		return errors.New("Error while starting bot!")
 	}
 
-	b.Start(ctx)
+	err = setWebhook(token, webHookURL)
+	if err != nil {
+		fmt.Println("Error while setting webhook:", err)
+	}
+
+	http.HandleFunc("/webhook", webhookHandler)
+	log.Println("Сервер запущен на порту 8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
+
+	return nil
+}
+
+func setWebhook(token, url string) error {
+	webHookURL := fmt.Sprintf("https://api.telegram.org/bot%s/setWebhook?url=%s", token, url)
+	resp, err := http.Get(webHookURL)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	log.Println("Successfully set webhook to", url)
+	return nil
 }
